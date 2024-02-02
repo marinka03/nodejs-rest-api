@@ -1,4 +1,4 @@
-const { HttpError } = require('../helpers');
+const {HttpError} = require('../helpers/HttpError');
 const {
   createContactSchema,
   updateContactSchema,
@@ -7,10 +7,11 @@ const {
 const validateBody = schema => {
   const func = (req, res, next) => {
     const { error } = schema.validate(req.body);
-
+      console.log(error)
     if (error && schema == createContactSchema) {
       throw HttpError(400, error.message);
     } else if (error && schema == updateContactSchema) {
+      console.log("update")
       throw HttpError(400, 'Body must have at least one field');
     }
 
@@ -20,4 +21,4 @@ const validateBody = schema => {
   return func;
 };
 
-module.exports = validateBody;
+module.exports.validateBody = validateBody;

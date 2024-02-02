@@ -20,12 +20,13 @@ app.use((req, res) => {
 
 app.use((err, req, res, next) => {
   const { status = 500, message = 'Server error' } = err; // функція обробник помилок
+  // console.log(status, message)
   res.status(status).json({ message });
 });
 
-app.use((req, res, next) => {
-  console.log('Hello from middleware');
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log('Hello from middleware');
+//   next();
+// });
 
 module.exports = app;

@@ -1,6 +1,7 @@
 const { Schema, model } = require('mongoose');
 const Joi = require('joi');
-const { handleMongooseError } = require('../helpers');
+
+const handleMongooseError = require('../helpers/handleMongooseError');
 
 const userSchema = new Schema(
   {
@@ -15,10 +16,19 @@ const userSchema = new Schema(
     },
     email: {
       type: String,
-      required: [true, 'Email is required'],
       minlength: 6,
+      required: [true, 'Email is required'],
       unique: true,
     },
+    subscription: {
+      type: String,
+      enum: {
+        values: ['starter', 'pro', 'business'],
+        message: 'Subscription error',
+      },
+      default: 'starter',
+    },
+    token: String,
   },
   { versionKey: false, timestamps: true }
 );

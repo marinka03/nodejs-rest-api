@@ -1,13 +1,15 @@
-const {HttpError} = require('./HttpError');
-const {ctrlWrapper} = require('./ctrlWrapper');
-const {validateBody} = require('./validateBody')
-const handleMongooseError = require('./handleMongooseError')
-const isValidId = require('./isValidId')
+const { HttpError } = require('./HttpError');
+const { ctrlWrapper } = require('./ctrlWrapper');
+const { validateBody } = require('./validateBody');
+const handleMongooseError = require('./handleMongooseError');
+const isValidId = require('./isValidId');
+const authenticate = require('./authenticate');
 
 module.exports = {
   HttpError,
   ctrlWrapper,
   validateBody,
   handleMongooseError,
-  isValidId
+  isValidId,
+  authenticate,
 };

@@ -1,6 +1,8 @@
 const { User } = require('../models/user');
 const { HttpError, ctrlWrapper } = require('../helpers');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -29,13 +31,47 @@ const login = async (req, res) => {
   if (!passwordCompare) {
     throw HttpError(403, 'Email or password is wrong');
   }
-  const token = '3jrhiue6.nkj3hk4h2kj.3kjn4kjjne';
+  const payload = {
+    id: user._id,
+  };
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: '23h' });
+  await User.findByIdAndUpdate(user._id, { token });
   res.json({
     token,
   });
 };
 
+const getCurrent = async (req, res) => {
+  const { email, subscription } = req.user;
+  res.json({
+    email,
+    subscription,
+  });
+};
+
+const logout = async (req, res) => {
+  const { _id } = req.user;
+  await User.findByIdAndUpdate(_id, { token: '' });
+  res.status(204).json();
+};
+
+const updateSubscription = async (req, res) => {
+  const { _id } = req.user;
+  const { subscription } = req.body;
+  const result = await User.findByIdAndUpdate(
+    _id,
+    { subscription },
+    { new: true, runValidators: true }
+  );
+  console.log(result);
+  console.log(req.body);
+  res.json({ message: `Subscription updated to ${result.subscription}` });
+};
+
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
+  getCurrent: ctrlWrapper(getCurrent),
+  logout: ctrlWrapper(logout),
+  updateSubscription: ctrlWrapper(updateSubscription),
 };

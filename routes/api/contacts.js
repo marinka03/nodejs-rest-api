@@ -8,7 +8,7 @@ const {
   updateContact,
   updateStatusContact,
 } = require('../../controllers/contactsControllers');
-const { isValidId, authenticate, validateBody } = require('../../helpers');
+const { isValidId, authenticate, validateBody } = require('../../middlewares');
 
 const { schemas } = require('../../models/contact');
 

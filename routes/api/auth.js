@@ -1,7 +1,7 @@
 const express = require('express');
 
 const authRouter = express.Router();
-const { validateBody, authenticate } = require('../../helpers');
+const { validateBody, authenticate } = require('../../middlewares');
 const { userSchemas } = require('../../models/user');
 const {
   register,
@@ -9,7 +9,10 @@ const {
   getCurrent,
   logout,
   updateSubscription,
+  updateAvatar,
 } = require('../../controllers/auth');
+
+const { upload } = require('../../middlewares');
 
 authRouter.post(
   '/register',
@@ -20,5 +23,11 @@ authRouter.post('/login', validateBody(userSchemas.logInSchema), login);
 authRouter.get('/current', authenticate, getCurrent);
 authRouter.post('/logout', authenticate, logout);
 authRouter.patch('/subscription', authenticate, updateSubscription);
+authRouter.patch(
+  '/avatars',
+  authenticate,
+  upload.single('avatar'),
+  updateAvatar
+);
 
 module.exports = authRouter;

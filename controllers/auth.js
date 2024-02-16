@@ -6,6 +6,7 @@ const gravatar = require('gravatar');
 const { SECRET_KEY } = process.env;
 const fs = require('fs/promises');
 const path = require('path');
+const resizeImage = require('../helpers')
 
 const avatarsDir = path.join(__dirname, '../', 'public', 'avatars');
 
@@ -82,8 +83,11 @@ const updateAvatar = async (req, res) => {
   const { _id } = req.user;
   const { path: tempUpload, originalname } = req.file;
   const fileName = `${_id}_${originalname}`;
+
   const resultUpload = path.join(avatarsDir, fileName);
   await fs.rename(tempUpload, resultUpload);
+  await resizeImage(resultUpload, resultUpload);
+
   const avatarURL = path.join('avatar', fileName);
   await User.findByIdAndUpdate(_id, { avatarURL });
   res.json({

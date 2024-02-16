@@ -1,7 +1,7 @@
 const express = require('express');
 
 const authRouter = express.Router();
-const { validateBody, authenticate } = require('../../middlewares');
+const { validateBody, authenticate, resizeImage } = require('../../middlewares');
 const { userSchemas } = require('../../models/user');
 const {
   register,
@@ -27,6 +27,7 @@ authRouter.patch(
   '/avatars',
   authenticate,
   upload.single('avatar'),
+  resizeImage,
   updateAvatar
 );
 

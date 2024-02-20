@@ -1,7 +1,11 @@
 const express = require('express');
 
 const authRouter = express.Router();
-const { validateBody, authenticate, resizeImage } = require('../../middlewares');
+const {
+  validateBody,
+  authenticate,
+  resizeImage,
+} = require('../../middlewares');
 const { userSchemas } = require('../../models/user');
 const {
   register,
@@ -10,6 +14,8 @@ const {
   logout,
   updateSubscription,
   updateAvatar,
+  verifyEmail,
+  resendVerifyEmail,
 } = require('../../controllers/auth');
 
 const { upload } = require('../../middlewares');
@@ -18,6 +24,12 @@ authRouter.post(
   '/register',
   validateBody(userSchemas.registerSchema),
   register
+);
+authRouter.get('/verify/:verificationToken', verifyEmail);
+authRouter.post(
+  '/verify',
+  validateBody(userSchemas.verifySchema),
+  resendVerifyEmail
 );
 authRouter.post('/login', validateBody(userSchemas.logInSchema), login);
 authRouter.get('/current', authenticate, getCurrent);
